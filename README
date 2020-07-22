@@ -1,0 +1,3 @@
+# sys.path.insert(0, './lib')
+# In bash.rc add module
+# export PYTHONPATH=$PATH_TO_FOLDER/helpers:$PYTHONPATH
