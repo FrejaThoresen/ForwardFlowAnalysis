@@ -9,58 +9,58 @@ from rootpy.io import root_open
 
 
 class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
-    def __init__(self, filename, directory, etabins, centbins, centmax, vertexbins, samples, ntot):
-        self.etabins = etabins
-        self.etalist = gen.makelist(-3.36, 4.8, self.etabins)
-        self.centbins = centbins
-        self.centmax = centmax
-        self.centlist = np.linspace(0, 100, centbins)
-        self.vertexbins = vertexbins
+    def __init__(self, filename, directory, eta_bins, cent_bins, cent_max, vertex_bins, samples, n_tot):
+        self.eta_bins = eta_bins
+        self.eta_list = gen.make_list(-3.36, 4.8, self.eta_bins)
+        self.cent_bins = cent_bins
+        self.cent_max = cent_max
+        self.cent_list = np.linspace(0, cent_max, cent_bins)
+        self.vertex_bins = vertex_bins
         self.no_samples = samples
         self.filename = filename
         self.directory = directory
-        self.samples = samples
-        self.etagap = True
+        self.no_samples = samples
+        self.eta_gap = True
 
-        self.centlist = np.linspace(0, self.centmax, self.centbins)
-        self.ntot = ntot
+        self.cent_list = np.linspace(0, self.cent_max, self.cent_bins)
+        self.n_tot = n_tot
 
         # dimensions (n, pt, vertex, eta, centrality)
-        self.c2 = {'val': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins)),
-                   'err': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins))}
-        self.d2 = {'val': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins)),
-                   'err': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins))}
-        self.d2A = {'val': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins)),
-                    'err': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins))}
-        self.vn2 = {'val': np.zeros((self.ntot, self.etabins, 9)), 'err': np.zeros((self.ntot, 9))}
-        self.vn2A = {'val': np.zeros((self.ntot, self.etabins, 9)), 'err': np.zeros((self.ntot, 9))}
-        self.vn2_ref = {'val': np.zeros((self.ntot, 34, 9)), 'err': np.zeros((self.ntot, self.etabins, 34, 9))}
-        self.vn4_ref = {'val': np.zeros((self.ntot, 34, 9)), 'err': np.zeros((self.ntot, self.etabins, 34, 9))}
-        self.c4 = {'val': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins)),
-                   'err': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins))}
-        self.d4 = {'val': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins)),
-                   'err': np.zeros((self.ntot, self.vertexbins, self.etabins, self.centbins))}
-        self.vn4 = {'val': np.zeros((self.ntot, self.etabins, 9)), 'err': np.zeros((self.ntot, self.etabins, 9))}
-        self.SC42 = {'val': np.zeros((self.etabins, 9)), 'err': np.zeros((self.etabins, 9))}
-        self.SC32 = {'val': np.zeros((self.etabins, 9)), 'err': np.zeros((self.etabins, 9))}
-        self.sc42 = {'val': np.zeros((self.etabins, 9)), 'err': np.zeros((self.etabins, 9))}
-        self.sc32 = {'val': np.zeros((self.etabins, 9)), 'err': np.zeros((self.etabins, 9))}
+        self.c2 = {'val': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins)),
+                   'err': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins))}
+        self.d2 = {'val': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins)),
+                   'err': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins))}
+        self.d2A = {'val': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins)),
+                    'err': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins))}
+        self.vn2 = {'val': np.zeros((self.n_tot, self.eta_bins, 9)), 'err': np.zeros((self.n_tot, 9))}
+        self.vn2A = {'val': np.zeros((self.n_tot, self.eta_bins, 9)), 'err': np.zeros((self.n_tot, 9))}
+        self.vn2_ref = {'val': np.zeros((self.n_tot, 34, 9)), 'err': np.zeros((self.n_tot, self.eta_bins, 34, 9))}
+        self.vn4_ref = {'val': np.zeros((self.n_tot, 34, 9)), 'err': np.zeros((self.n_tot, self.eta_bins, 34, 9))}
+        self.c4 = {'val': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins)),
+                   'err': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins))}
+        self.d4 = {'val': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins)),
+                   'err': np.zeros((self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins))}
+        self.vn4 = {'val': np.zeros((self.n_tot, self.eta_bins, 9)), 'err': np.zeros((self.n_tot, self.eta_bins, 9))}
+        self.SC42 = {'val': np.zeros((self.eta_bins, 9)), 'err': np.zeros((self.eta_bins, 9))}
+        self.SC32 = {'val': np.zeros((self.eta_bins, 9)), 'err': np.zeros((self.eta_bins, 9))}
+        self.sc42 = {'val': np.zeros((self.eta_bins, 9)), 'err': np.zeros((self.eta_bins, 9))}
+        self.sc32 = {'val': np.zeros((self.eta_bins, 9)), 'err': np.zeros((self.eta_bins, 9))}
 
-        self.vn2_vtx = {'val': np.zeros((self.ntot, 10, self.etabins, 9)),
-                        'err': np.zeros((self.ntot, 10, self.etabins, 9))}
+        self.vn2_vtx = {'val': np.zeros((self.n_tot, 10, self.eta_bins, 9)),
+                        'err': np.zeros((self.n_tot, 10, self.eta_bins, 9))}
 
-        self.rnnA = {'val': np.zeros((self.ntot, self.vertexbins, 5, self.centbins)),
-                     'err': np.zeros((self.ntot, self.vertexbins, 5, self.centbins))}
-        self.rnnB = {'val': np.zeros((self.ntot, self.vertexbins, 5, self.centbins)),
-                     'err': np.zeros((self.ntot, self.vertexbins, 5, self.centbins))}
-        self.rnn = {'val': np.zeros((self.ntot, 5, 9)), 'err': np.zeros((self.ntot, 5, 9))}
-        self.rnn_forward = {'val': np.zeros((self.ntot, 13, 9)), 'err': np.zeros((self.ntot, 13, 9))}
-        self.rnn_backward = {'val': np.zeros((self.ntot, 7, 9)), 'err': np.zeros((self.ntot, 7, 9))}
+        self.rnnA = {'val': np.zeros((self.n_tot, self.vertex_bins, 5, self.cent_bins)),
+                     'err': np.zeros((self.n_tot, self.vertex_bins, 5, self.cent_bins))}
+        self.rnnB = {'val': np.zeros((self.n_tot, self.vertex_bins, 5, self.cent_bins)),
+                     'err': np.zeros((self.n_tot, self.vertex_bins, 5, self.cent_bins))}
+        self.rnn = {'val': np.zeros((self.n_tot, 5, 9)), 'err': np.zeros((self.n_tot, 5, 9))}
+        self.rnn_forward = {'val': np.zeros((self.n_tot, 13, 9)), 'err': np.zeros((self.n_tot, 13, 9))}
+        self.rnn_backward = {'val': np.zeros((self.n_tot, 7, 9)), 'err': np.zeros((self.n_tot, 7, 9))}
 
-        self.reference = np.zeros((self.samples, self.ntot, self.vertexbins, self.etabins, self.centbins, 4))
-        self.differential = np.zeros((self.samples, self.ntot, self.vertexbins, self.etabins, self.centbins, 6))
-        self.differential_mixed = np.zeros((self.samples, self.vertexbins, self.etabins, self.centbins, 5))
-        self.differential_mixedn = np.zeros((self.samples, self.ntot, self.vertexbins, 14, self.centbins, 2))
+        self.reference = np.zeros((self.no_samples, self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins, 4))
+        self.differential = np.zeros((self.no_samples, self.n_tot, self.vertex_bins, self.eta_bins, self.cent_bins, 6))
+        self.differential_mixed = np.zeros((self.no_samples, self.vertex_bins, self.eta_bins, self.cent_bins, 5))
+        self.differential_mixedn = np.zeros((self.no_samples, self.n_tot, self.vertex_bins, 14, self.cent_bins, 2))
 
         # (vn2{2}, v3{2}, vn4{2}, vn2{4}), centrality
         self.sys = {'tpc_pbpb': np.zeros((4, 9)), 'tpc_xexe': np.zeros((4, 9)), 'fmd_pbpb': np.zeros((4, 34, 9)),
@@ -81,14 +81,14 @@ class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
         b_pos = np.array([0.979, 0.943, 0.928])
         res_pos = np.zeros((3, 13))
         for n in range(0, 3):
-            res_pos[n] = a_pos[n] * self.etalist[21:] + b_pos[n]
+            res_pos[n] = a_pos[n] * self.eta_list[21:] + b_pos[n]
         res_pos = np.fabs(1 - res_pos) * 100
 
         a_neg = np.array([-0.039, -0.058, -0.078])
         b_neg = np.array([0.925, 0.868, 0.808])
         res_neg = np.zeros((3, 7))
         for n in range(0, 3):
-            res_neg[n] = a_neg[n] * self.etalist[0:7] + b_neg[n]
+            res_neg[n] = a_neg[n] * self.eta_list[0:7] + b_neg[n]
         res_neg = np.fabs(1 - res_neg) * 100
 
         self.sys['fmd_pbpb'][0, ...] = np.array([22.1, 19.7, 18.0, 17.4, 17.5, 17.2, 20.0, 0, 0])
@@ -119,28 +119,20 @@ class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
         self.sys['fmd_xexe'][3, ...] = np.sqrt(self.sys['fmd_xexe'][3, ...]) * 0.01
         self.sys['fmd_xexe'][:, 7:21, ...] = float('NaN')
 
-    def vnm(self, m):
-        if (m == 2):
+    def get_vnm(self, m):
+        if m == 2:
             return self.vn2
-        if (m == 4):
+        if m == 4:
             return self.vn4
         return
 
-    def readinput(self, repeat=True):
-        myfile = root_open(self.filename, 'read')
-        awesome = myfile.Get(self.directory)
-        self.reference = rnp.hist2array(awesome.cumulants.Get('reference'))
-        self.differential = rnp.hist2array(awesome.cumulants.Get('standard_differential'))
-
-        if (repeat):
-            self.reference = np.repeat(self.reference, self.etabins, axis=4)  # samples, vertex, eta, cent, kind
-        myfile.Close()
-        return
-
     def read_cumulant_m(self, m):
+        """
+        read m-particle cumulants
+        """
         myfile = root_open(self.filename, 'read')
         awesome = myfile.Get(self.directory)
-        if (self.etagap):
+        if self.eta_gap:
             cumu_rW2 = np.repeat(rnp.hist2array(awesome.Get('cumulants').Get('reference').Get('rW2').Get('cumu_rW2')),
                                  34, axis=2)
             cumu_rW2Two = np.repeat(
@@ -172,7 +164,7 @@ class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
         self.differential[:, 1, ..., dW2TwoB] = cumu_dW2TwoB[1, ...]
         self.differential[:, 2, ..., dW2TwoB] = cumu_dW2TwoB[2, ...]
 
-        if (m == 4):
+        if m == 4:
             cumu_rW4 = np.repeat(rnp.hist2array(awesome.Get('cumulants').Get('reference').Get('rW4').Get('cumu_rW4')),
                                  34, axis=2)
             cumu_rW4Four = np.repeat(
@@ -194,12 +186,12 @@ class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
             self.differential[:, 1, ..., dW4Four] = cumu_dW4Four[1, ...]
             self.differential[:, 2, ..., dW4Four] = cumu_dW4Four[2, ...]
 
-    def read2cumulant_rebinA(self):
-        myfile = root_open(self.filename, 'read')
-        awesome = myfile.Get(self.directory)
+    def read_2cumulant_Aside(self):
+        datafile = root_open(self.filename, 'read')
+        directory = datafile.Get(self.directory)
 
-        cumu_dW2A = rnp.hist2array(awesome.Get('cumulants').Get('standard').Get('dW2A').Get('cumu_dW2A'))
-        cumu_dW2TwoA = rnp.hist2array(awesome.Get('cumulants').Get('standard').Get('dW2TwoA').Get('cumu_dW2TwoA'))
+        cumu_dW2A = rnp.hist2array(directory.Get('cumulants').Get('standard').Get('dW2A').Get('cumu_dW2A'))
+        cumu_dW2TwoA = rnp.hist2array(directory.Get('cumulants').Get('standard').Get('dW2TwoA').Get('cumu_dW2TwoA'))
 
         self.differential[:, 0, ..., dW2A] = cumu_dW2A
         self.differential[:, 1, ..., dW2A] = cumu_dW2A
@@ -208,7 +200,7 @@ class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
         self.differential[:, 1, ..., dW2TwoA] = cumu_dW2TwoA[1]
         self.differential[:, 2, ..., dW2TwoA] = cumu_dW2TwoA[2]
 
-    def readdecorr(self):
+    def read_decorr(self):
         myfile = root_open(self.filename, 'read')
         awesome = myfile.Get(self.directory)
 
@@ -218,7 +210,7 @@ class Flow(bootstrap.Bootstrap, plotting.Plot, systematics.Sys):
         self.differential_mixedn[..., dW2TwoTwoD] = cumu_dW2TwoTwoD
         self.differential_mixedn[..., dW2TwoTwoN] = cumu_dW2TwoTwoN
 
-    def readmixed(self):
+    def read_mixed(self):
         myfile = root_open(self.filename, 'read')
         awesome = myfile.Get(self.directory)
         cumu_dW22TwoTwoD = rnp.hist2array(

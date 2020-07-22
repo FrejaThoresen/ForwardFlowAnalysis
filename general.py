@@ -79,23 +79,23 @@ def divide_samples(a, b):
 
 
 def weighted_std(means, stds, axis):
-    weightedMean = weightedAverage(means, stds, axis)
-    weights = np.divide(1, np.float_power(stds, 2))
+    mean_w = weighted_average(means, stds, axis)
+    w = np.divide(1, np.float_power(stds, 2))
 
     if axis == 0:
-        upper = np.nansum(weights * np.float_power(means - weightedMean, 2), axis=axis)
-        lower = np.nansum(weights, axis=axis)
+        upper = np.nansum(w * np.float_power(means - mean_w, 2), axis=axis)
+        lower = np.nansum(w, axis=axis)
 
     if axis == 1:
-        upper = np.nansum(weights * np.float_power(means - weightedMean[:, None], 2), axis=axis)
-        lower = np.nansum(weights, axis=axis)
+        upper = np.nansum(w * np.float_power(means - mean_w[:, None], 2), axis=axis)
+        lower = np.nansum(w, axis=axis)
 
     if axis == 2:
-        upper = np.nansum(weights * np.float_power(means - weightedMean[:, :, None], 2), axis=axis)
+        upper = np.nansum(w * np.float_power(means - mean_w[:, :, None], 2), axis=axis)
     if axis == 3:
-        upper = np.nansum(weights * np.float_power(means - weightedMean[:, :, :, None], 2), axis=axis)
+        upper = np.nansum(w * np.float_power(means - mean_w[:, :, :, None], 2), axis=axis)
     if axis == 4:
-        upper = np.nansum(weights * np.float_power(means - weightedMean[:, :, :, :, None], 2), axis=axis)
+        upper = np.nansum(w * np.float_power(means - mean_w[:, :, :, :, None], 2), axis=axis)
 
     return np.sqrt(np.divide(upper, lower, where=np.fabs(lower) > 0, out=np.full_like(lower, float('NaN'))))
 

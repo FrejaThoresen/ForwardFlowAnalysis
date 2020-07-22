@@ -12,7 +12,7 @@ def bootstrap(estimator, size, *args):
     return (_inner(estimator, *args) for _ in range(size))
 
 
-class Bootstrap():
+class Bootstrap:
 
     def boot_vnm(self, b, m, n_max):
         """Bootstap v_n\{m\}, where n <= n_max."""
@@ -105,7 +105,7 @@ class Bootstrap():
         _ref = np.nansum(self.reference, 2)
         _dif = np.nansum(self.differential, 2)
 
-        if (m == 2):  # 2-particle cumulant
+        if m == 2:  # 2-particle cumulant
             vn2 = calc_vn2A(_ref, _dif)  # The estimate
             boot = list(bootstrap(calc_vn2A, b, _ref, _dif))  # Get the bootstrap estimates
             bm, bs = np.mean(boot, axis=0), np.std(boot, axis=0)
