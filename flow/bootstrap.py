@@ -14,25 +14,24 @@ def bootstrap(estimator, size, *args):
 
 class Bootstrap:
 
-    def boot_vnm(self, b, m, n_max):
-        """Bootstap v_n\{m\}, where n <= n_max."""
+    def boot_vnm(self, b, m):
+        """Bootstap v_n\{m\}."""
+        cumulant = {2, 4}
+        if m not in cumulant:
+            raise ValueError("boot_vnm: m must be one of %r-cumulants." % cumulant)
 
         _ref = np.nansum(self.reference, 2)
         _dif = np.nansum(self.differential, 2)
 
+        vnm = calc_vnm(_ref, _dif, m)  # The estimate
+        boot = list(bootstrap(calc_vnm, b, _ref, _dif))  # Get the bootstrap estimates
+        bm, bs = np.mean(boot, axis=0), np.std(boot, axis=0)
+
         if m == 2:  # 2-particle cumulant
-            vn2 = calc_vn2(_ref, _dif)  # The estimate
-            boot = list(bootstrap(calc_vn2, b, _ref, _dif))  # Get the bootstrap estimates
-            bm, bs = np.mean(boot, axis=0), np.std(boot, axis=0)
-
-            self.vn2['val'] = np.array(vn2)
+            self.vn2['val'] = np.array(vnm)
             self.vn2['err'] = np.array(bs)
-        if m == 4:  # 4-particle cumulant
-            vn4 = calc_vn4(_ref, _dif)  # The estimate
-
-            boot = list(bootstrap(calc_vn4, b, _ref, _dif))  # Get the bootstrap estimates
-            bm, bs = np.mean(boot, axis=0), np.std(boot, axis=0)
-            self.vn4['val'] = np.array(vn4)
+        else:  # 4-particle cumulant
+            self.vn4['val'] = np.array(vnm)
             self.vn4['err'] = np.array(bs)
 
         return

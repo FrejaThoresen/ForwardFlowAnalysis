@@ -164,28 +164,25 @@ def rebin(a, *args):
     return eval(''.join(evList))
 
 
-def apply_symmetry(vn, sigma, etalist):
-    vn_sym = np.zeros((3, 34, 9))
-    sigma_sym = np.zeros((3, 34, 9))
-    for n in range(0, 3):
-        vn_sym[n] = np.full_like(vn[n], float('NaN'))
-        sigma_sym[n] = np.full_like(vn[n], float('NaN'))
+def apply_symmetry(vn, sigma, eta_list):
+    vn_sym = np.full_like(vn, float('NaN'))
+    sigma_sym = np.full_like(sigma, float('NaN'))
     for n in range(0, 3):
         for c in range(0, 9):
-            for etabin in range(0, 34):
-                eta = etalist[etabin]
+            for eta_bin in range(0, 34):
+                eta = eta_list[eta_bin]
                 if abs(eta) < 3.4:
-                    negetabin = 27 - etabin
-                    negeta = etalist[negetabin]
-                    weights = [1 / np.float_power(sigma[n, etabin, c], 2),
-                               1 / np.float_power(sigma[n, negetabin, c], 2)]
-                    vn_sym[n, etabin, c] = (weights[0] * vn[n, etabin, c] + weights[1] * vn[n, negetabin, c]) / (
+                    neg_eta_bin = 27 - eta_bin
+                    print 1 / np.float_power(sigma[n, eta_bin, c], 2)
+                    weights = [1 / np.float_power(sigma[n, eta_bin, c], 2),
+                               1 / np.float_power(sigma[n, neg_eta_bin, c], 2)]
+                    vn_sym[n, eta_bin, c] = (weights[0] * vn[n, eta_bin, c] + weights[1] * vn[n, neg_eta_bin, c]) / (
                                 weights[0] + weights[1])
-                    sigma_sym[n, etabin, c] = 1 / np.sqrt(weights[0] + weights[1])
-                    vn_sym[n, negetabin, c] = vn_sym[n, etabin, c]
-                    sigma_sym[n, negetabin, c] = sigma_sym[n, etabin, c]
+                    sigma_sym[n, eta_bin, c] = 1 / np.sqrt(weights[0] + weights[1])
+                    vn_sym[n, neg_eta_bin, c] = vn_sym[n, eta_bin, c]
+                    sigma_sym[n, neg_eta_bin, c] = sigma_sym[n, eta_bin, c]
 
                 else:
-                    vn_sym[n, etabin, c] = vn[n, etabin, c]
-                    sigma_sym[n, etabin, c] = sigma[n, etabin, c]
+                    vn_sym[n, eta_bin, c] = vn[n, eta_bin, c]
+                    sigma_sym[n, eta_bin, c] = sigma[n, eta_bin, c]
     return vn_sym, sigma_sym
