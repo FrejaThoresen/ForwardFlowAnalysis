@@ -2,14 +2,14 @@ from calculations import *
 import numpy as np
 
 
-def bootstrap(estimator, size, *args):
+def bootstrap(estimator, size, m, *args):
     """General bootstap method."""
 
-    def _inner(estimator, *args):
+    def _inner(estimator, m, *args):
         index = np.random.randint(len(args[0]), size=len(args[0]))
-        return estimator(*[x[index, ...] for x in args])
+        return estimator(m, *[x[index, ...] for x in args])
 
-    return (_inner(estimator, *args) for _ in range(size))
+    return (_inner(estimator, m, *args) for _ in range(size))
 
 
 class Bootstrap:
@@ -23,8 +23,8 @@ class Bootstrap:
         _ref = np.nansum(self.reference, 2)
         _dif = np.nansum(self.differential, 2)
 
-        vnm = calc_vnm(_ref, _dif, m)  # The estimate
-        boot = list(bootstrap(calc_vnm, b, _ref, _dif))  # Get the bootstrap estimates
+        vnm = calc_vnm(m, _ref, _dif)  # The estimate
+        boot = list(bootstrap(calc_vnm, b, m, _ref, _dif))  # Get the bootstrap estimates
         bm, bs = np.mean(boot, axis=0), np.std(boot, axis=0)
 
         if m == 2:  # 2-particle cumulant
@@ -148,8 +148,8 @@ class Bootstrap:
         ref = self.reference
         dif = self.differential
 
-        vn2 = calc_vn2vtx(ref, dif)  # The estimate
-        boot = list(bootstrap(calc_vn2vtx, b, ref, dif))  # Get the bootstrap estimates
+        vn2 = calc_vn2_vtx(ref, dif)  # The estimate
+        boot = list(bootstrap(calc_vn2_vtx, b, ref, dif))  # Get the bootstrap estimates
         bm, bs = np.mean(boot, axis=0), np.std(boot, axis=0)
         self.vn2_vtx['val'] = np.array(vn2)
         self.vn2_vtx['err'] = np.array(bs)

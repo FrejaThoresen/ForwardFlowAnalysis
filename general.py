@@ -173,7 +173,7 @@ def apply_symmetry(vn, sigma, eta_list):
                 eta = eta_list[eta_bin]
                 if abs(eta) < 3.4:
                     neg_eta_bin = 27 - eta_bin
-                    print 1 / np.float_power(sigma[n, eta_bin, c], 2)
+                    #print 1 / np.float_power(sigma[n, eta_bin, c], 2)
                     weights = [1 / np.float_power(sigma[n, eta_bin, c], 2),
                                1 / np.float_power(sigma[n, neg_eta_bin, c], 2)]
                     vn_sym[n, eta_bin, c] = (weights[0] * vn[n, eta_bin, c] + weights[1] * vn[n, neg_eta_bin, c]) / (
